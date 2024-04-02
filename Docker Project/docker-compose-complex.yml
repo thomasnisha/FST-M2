@@ -1,0 +1,40 @@
+version: "3"
+services:
+  # Ngnix service
+  nginx:
+    build: ./nginx
+    depends_on:
+          - api
+          - client
+    ports:
+          - "3050:80"
+
+  # Postgres database
+  postgres_db:
+    image: "postgres"
+    environment:
+          - POSTGRES_PASSWORD=postgres_password
+  #redis database
+  redis_db:
+    image: "redis"
+  #API service
+  api:
+    build: ./server
+    image: "nisht/complex_api"
+    environment:
+          - REDIS_HOST=redis_db
+          - REDIS_PORT=6379
+          - PGHOST=postgres_db
+          - PGPORT=5432
+          - PGUSER=postgres
+          - PGPASSWORD=postgres_password
+          - PGDATABASE=postgres
+  worker:
+    build: ./worker
+    image: "nisht/complex_worker"
+    environment:
+          - REDIS_HOST=redis_db
+          - REDIS_PORT=6379
+  client:
+    build: ./client
+    image: "nisht/complex_client"
