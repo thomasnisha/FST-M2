@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: worker-deployment
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            component: worker
+    template:
+        metadata:
+            labels:
+                component: worker
+        spec:
+            containers:
+                - name: woker
+                  image: nisht/complex_worker
+                  resources:
+                      limits:
+                          memory: "128Mi"
+                          cpu: "500m"
+                  env:
+                    - name: REDIS-HOST
+                      value: redis-cluster-ip-service
+                    - name: REDIS-PORT
+                      value: '6379'
+    
+
