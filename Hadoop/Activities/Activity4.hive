@@ -1,0 +1,14 @@
+-- Delete old files
+  DROP TABLE files;
+  DROP TABLE word_counts;
+  
+-- Create a table to store results
+$ hive> CREATE TABLE files (line STRING);
+
+-- Load data into the database using a file on your local system (NOT HDFS)
+$ hive> LOAD DATA LOCAL INPATH 'root/input.txt' into Table Files;
+
+-- Create a new table using data from the files table
+$ hive> CREATE TABLE word_counts AS SELECT word, count(1) AS wordCount 
+FROM (SELECT explode(split(line, ' ')) 
+AS word FROM files) w GROUP BY word ORDER BY wordCount DESC;
