@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create User
+      user:
+        name: testuser
+        append: true
